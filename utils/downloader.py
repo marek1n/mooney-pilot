@@ -16,7 +16,7 @@ class AzureImgSearch:
             }
 
     @cache
-    def _image_urls(self, search_term: str, offset_max: int = 200) -> list:
+    def get_image_urls(self, search_term: str, offset_max: int = 200) -> list[str]:
 
         params  = {
             "q": search_term,
@@ -24,13 +24,13 @@ class AzureImgSearch:
             "imageType": "photo",
             "aspect": "all"
             }
-        
-        urls = []
-        offset = 0
 
         print(f"\nSearching for '{search_term}' images...\n")
 
-        while (offset <= offset_max):
+        urls = []
+        offset = 0
+
+        while offset <= offset_max:
             params["offset"] = offset
             response = requests.get(self._SEARCH_URL, headers=self._HEADERS, params=params)
             response.raise_for_status()
@@ -41,17 +41,19 @@ class AzureImgSearch:
                 urls.append(url)
 
             # check if search not stuck on last page
-            if params["offset"] != search_results["nextOffset"]:
-                offset = search_results["nextOffset"]
-            else: 
+            if (params["offset"] == search_results["nextOffset"]
+                or params["offset"] > search_results["nextOffset"]): 
                 break
 
+            offset = search_results["nextOffset"]
+
+        urls = list(set(urls))
         print(len(urls), f"urls found for {search_term}\n")
 
         return urls
 
 
-    def _save_images(url_list: list, search_term: str):
+    def save_images(url_list: list[str], search_term: str):
         path = Path.cwd() / "final" / search_term
         path.mkdir(parents=True, exist_ok=True)
 
