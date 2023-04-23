@@ -1,0 +1,9 @@
+.DS_Store
+.ipynb_checkpoints/
+data/
+notebooks/.ipynb_checkpoints/
+utils/.env
+utils/DS_Store
+utils/.ipynb_checkpoints/
+utils/images.csv
+utils/find_duplicates_clip.ipynb

@@ -14,10 +14,15 @@ class AzureImgSearch:
         self._HEADERS = {
             "Ocp-Apim-Subscription-Key": self._KEY
             }
+        
+        if self._KEY is None: 
+            raise ValueError("Subscription key not found, check your .env file")
 
     @cache
     def get_image_urls(self, search_term: str, offset_max: int = 200) -> list[str]:
-
+        """Searches the Bing Image Search API for images matching the given search term,
+        pages through results and returns a list of URLs.
+        """
         params  = {
             "q": search_term,
             "license": "public", 
