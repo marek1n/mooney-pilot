@@ -5,10 +5,9 @@ from tqdm import tqdm
 from Katna.image import Image
 from Katna.writer import ImageCropDiskWriter
 
-# dls_path/term/cropped
-# dls_path/term/resized
 
-def crop_images(term: str, dls_path: (Path | str)):
+
+def crop_images(term: str, dls_path: Path):
 
     cat_path = dls_path / term
     imgs_cat = [imgpath for imgpath in cat_path.glob('**/*') 
@@ -31,13 +30,13 @@ def crop_images(term: str, dls_path: (Path | str)):
                 num_of_crops=1,
                 writer=diskwriter
             )
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     print(f"Cropping finished.\nImages saved in {output_path}")
 
 
-def resize_images(term: str, dls_path: (Path | str)):
+def resize_images(term: str, dls_path: Path):
 
     cat_path = dls_path / term
     
@@ -53,14 +52,18 @@ def resize_images(term: str, dls_path: (Path | str)):
         target_height=500,
         down_sample_factor=8,
     )
-
     print("Resizing images ...\n")
 
     for i, (filepath, resized_image) in enumerate(resized_images.items()):
         img_module.save_image_to_disk(
             resized_image, str(resized), f"{term}_{i}", ".jpeg"
         )
-
     print(f"Resizing finished.\nImages saved in {resized}")
 
-    
+
+if __name__ == "__main__":
+    # example use
+    term = 'cat'
+    downloads = Path.cwd()
+    crop_images(term, downloads)
+    resize_images(term, downloads)

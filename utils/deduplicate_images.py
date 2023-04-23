@@ -5,7 +5,7 @@ import numpy as np
 
 
 
-def compute_phash(image_path: str | Path) -> tuple[str, str, str]:
+def compute_phash(image_path: str | Path) -> tuple[imagehash.ImageHash, ...]:
     """Computes pHash for base image + vertically & horizontally flipped"""
     # load greyscale image
     image = Image.open(image_path)
@@ -18,7 +18,6 @@ def compute_phash(image_path: str | Path) -> tuple[str, str, str]:
                             imagehash.phash(mirror), \
                             imagehash.phash(flip)
     
-    # return tuple(map(str, (phash, mphash, fphash)))
     return phash, mphash, fphash
 
 
@@ -29,10 +28,10 @@ if __name__ == "__main__":
     filenames = list(map(lambda x: str(x).split('/')[-1], files))
 
     phashz = [compute_phash(img) for img in files]
-    phash_list = phashz
-    # Compute Hamming distance between all pairs of tuples
-    for i, x in enumerate(phash_list):
-        for j, y in enumerate(phash_list):
+    
+    # compute Hamming distance between all pairs of tuples
+    for i, x in enumerate(phashz):
+        for j, y in enumerate(phashz):
             if i < j:
                 hamming_ds = [(x[k] - y[l]) for k in range(3) for l in range(3)]
                 if any(d < 20 for d in hamming_ds):
