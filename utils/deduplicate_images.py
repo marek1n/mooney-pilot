@@ -23,7 +23,7 @@ def compute_phash(image_path: str | Path) -> tuple[imagehash.ImageHash, ...]:
 
 if __name__ == "__main__":
 
-    FOLDER = '/Users/mn/Desktop/g_images/stim_set_final_by_cat/garden tools'
+    FOLDER = '/Users/mn/Desktop/g_images/stim_set_final_by_cat/tree'
     files = [f for f in Path(FOLDER).glob("dis_*.jpg")]
     filenames = list(map(lambda x: str(x).split('/')[-1], files))
 
